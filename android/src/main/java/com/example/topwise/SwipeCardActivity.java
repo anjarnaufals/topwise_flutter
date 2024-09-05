@@ -1,11 +1,9 @@
 package com.example.topwise;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
-import android.view.View;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.topwise.cloudpos.aidl.magcard.AidlMagCard;
@@ -32,18 +30,14 @@ public class SwipeCardActivity {
     }
 
     public interface SwipeCardCallback {
-        void onCardSwiped(String cardData);
+        void onEventFinish(String value);
     }
 
     /**
-     * get track data
-     *
-     * @createtor：Administrator
-     * @date:2015-8-4 上午7:29:30
+     * get swiped track data
+     * open instance SDK for getting magnetic stripe detector
      */
     public void getTrackData(SwipeCardCallback callback) {
-
-        data = magCardDev != null ? "AidlMagCard not null" : "AidlMagCard is Null";
 
         if (magCardDev != null) {
             try {
@@ -52,15 +46,27 @@ public class SwipeCardActivity {
                 magCardDev.searchCard(timeOut, new MagCardListener.Stub() {
                     @Override
                     public void onTimeout() throws RemoteException {
-                        data = "Swipe Timeout";
-                        Log.d("Swipe Timeout", "onTimeout: ");
                         isSwipeCard = false;
+                        Log.d("Swipe Timeout", "onTimeout: ");
+
+                        data = "Swipe Timeout";
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (callback != null) {
+                                    callback.onEventFinish(data);
+                                }
+                            }
+                        });
                     }
+
                     @Override
                     public void onSuccess(TrackData trackData)
                             throws RemoteException {
+                        isSwipeCard = false;
 
                         Map<String, String> dataMap = new HashMap<>();
+
                         dataMap.put("firstTrackData", trackData.getFirstTrackData());
                         dataMap.put("secondTrackData", trackData.getSecondTrackData());
                         dataMap.put("thirdTrackData", trackData.getThirdTrackData());
@@ -73,70 +79,108 @@ public class SwipeCardActivity {
 
                         try {
                             data = objectMapper.writeValueAsString(dataMap);
+
                             Log.d("onSuccess", "onSuccess: "+objectMapper.writeValueAsString(dataMap));
 
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (callback != null) {
-                                        callback.onCardSwiped(data);
+                                        callback.onEventFinish(data);
                                     }
                                 }
                             });
 
-//                            if (callback != null) {
-//                                callback.onCardSwiped(data);
-//                            }
                         } catch (JsonProcessingException e) {
                             data = e.toString();
+
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (callback != null) {
+                                        callback.onEventFinish(data);
+                                    }
+                                }
+                            });
                         }
-
-                        isSwipeCard = false;
-
                     }
 
                     @Override
                     public void onGetTrackFail() throws RemoteException {
+                        isSwipeCard = false;
                         Log.d("onGetTrackFail", "onGetTrackFail: ");
 
-                        isSwipeCard = false;
-                        data = "track failed";
+                        data = "Swipe Card Failed";
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (callback != null) {
+                                    callback.onEventFinish(data);
+                                }
+                            }
+                        });
 
                     }
 
                     @Override
                     public void onError(int arg0) throws RemoteException {
+                        isSwipeCard = false;
                         Log.d("onError", "onError: ");
 
-                        isSwipeCard = false;
-                        data = "error";
+                        data = "Swipe Card Error";
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (callback != null) {
+                                    callback.onEventFinish(data);
+                                }
+                            }
+                        });
                     }
 
                     @Override
                     public void onCanceled() throws RemoteException {
+                        isSwipeCard = false;
                         Log.d("onCanceled", "onCanceled: ");
 
-                        isSwipeCard = false;
-                        data = "cancelled";
+                        data = "Swipe Card Cancelled";
 
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (callback != null) {
+                                    callback.onEventFinish(data);
+                                }
+                            }
+                        });
                     }
                 });
             } catch (RemoteException e) {
-                // TODO Auto-generated catch block
+                Log.e("getTrackData", "getTrackData: " +e.toString() );
                 e.printStackTrace();
                 data = e.toString();
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (callback != null) {
+                            callback.onEventFinish(data);
+                        }
+                    }
+                });
             }
         }
 
     }
 
     /**
-     * get encrypt Track data
-     *
-     * @createtor：Administrator
-     * @date:2015-8-4 上午7:29:40
+     * get swiped encrypted card track data
+     * open instance SDK for getting magnetic stripe detector
      */
-    public void getEncryptTrackData() {
+
+    public void getEncryptTrackData(SwipeCardCallback callback) {
         try {
             if (null != magCardDev) {
                 isSwipeCard = true;
@@ -147,39 +191,125 @@ public class SwipeCardActivity {
                         isSwipeCard = false;
                         data = "Swipe Timeout";
 
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (callback != null) {
+                                    callback.onEventFinish(data);
+                                }
+                            }
+                        });
+
                     }
 
                     @Override
                     public void onSuccess(String[] trackData) throws RemoteException {
                         isSwipeCard = false;
+                        Map<String, String> dataMap = new HashMap<>();
 
+                        dataMap.put("encryptedFormattedTrackData", trackData[0]);
+                        dataMap.put("cardData", trackData[1]);
+
+                        ObjectMapper objectMapper = new ObjectMapper();
+
+                        try {
+                            data = objectMapper.writeValueAsString(dataMap);
+
+                            Log.d("onSuccess", "onSuccess: "+objectMapper.writeValueAsString(dataMap));
+
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (callback != null) {
+                                        callback.onEventFinish(data);
+                                    }
+                                }
+                            });
+
+                        } catch (JsonProcessingException e) {
+                            data = e.toString();
+
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (callback != null) {
+                                        callback.onEventFinish(data);
+                                    }
+                                }
+                            });
+                        }
                     }
 
                     @Override
                     public void onGetTrackFail() throws RemoteException {
                         isSwipeCard = false;
+                        Log.d("onGetTrackFail", "onGetTrackFail: ");
 
+                        data = "Swipe Card Failed";
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (callback != null) {
+                                    callback.onEventFinish(data);
+                                }
+                            }
+                        });
                     }
 
                     @Override
                     public void onError(int arg0) throws RemoteException {
                         isSwipeCard = false;
+                        Log.d("onError", "onError: ");
+
+                        data = "Swipe Card Error";
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (callback != null) {
+                                    callback.onEventFinish(data);
+                                }
+                            }
+                        });
                     }
 
                     @Override
                     public void onCanceled() throws RemoteException {
                         isSwipeCard = false;
+                        Log.d("onCanceled", "onCanceled: ");
+
+                        data = "Swipe Card Cancelled";
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (callback != null) {
+                                    callback.onEventFinish(data);
+                                }
+                            }
+                        });
                     }
                 });
             }
         } catch (RemoteException e) {
-            // TODO Auto-generated catch block
+            Log.e("getTrackData", "getTrackData: " +e.toString() );
             e.printStackTrace();
+            data = e.toString();
+
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (callback != null) {
+                        callback.onEventFinish(data);
+                    }
+                }
+            });
         }
     }
 
     //get encrypt format track data
-    public void getEncryptFormatTrackData() {
+    public void getEncryptFormatTrackData(SwipeCardCallback callback) {
         try {
             if (null != magCardDev) {
                 isSwipeCard = true;
@@ -190,45 +320,140 @@ public class SwipeCardActivity {
                             @Override
                             public void onTimeout() throws RemoteException {
                                 isSwipeCard = false;
+                                data = "Swipe Timeout";
+
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (callback != null) {
+                                            callback.onEventFinish(data);
+                                        }
+                                    }
+                                });
                             }
 
                             @Override
                             public void onSuccess(String[] trackData) throws RemoteException {
                                 isSwipeCard = false;
+                                Map<String, String> dataMap = new HashMap<>();
+
+                                dataMap.put("encryptedFormattedTrackData", trackData[0]);
+                                dataMap.put("cardData", trackData[1]);
+
+                                ObjectMapper objectMapper = new ObjectMapper();
+
+                                try {
+                                    data = objectMapper.writeValueAsString(dataMap);
+
+                                    Log.d("onSuccess", "onSuccess: "+objectMapper.writeValueAsString(dataMap));
+
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (callback != null) {
+                                                callback.onEventFinish(data);
+                                            }
+                                        }
+                                    });
+
+                                } catch (JsonProcessingException e) {
+                                    data = e.toString();
+
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (callback != null) {
+                                                callback.onEventFinish(data);
+                                            }
+                                        }
+                                    });
+                                }
 
                             }
 
                             @Override
                             public void onGetTrackFail() throws RemoteException {
                                 isSwipeCard = false;
+                                Log.d("onGetTrackFail", "onGetTrackFail: ");
+
+                                data = "Swipe Card Failed";
+
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (callback != null) {
+                                            callback.onEventFinish(data);
+                                        }
+                                    }
+                                });
                             }
 
                             @Override
                             public void onError(int arg0) throws RemoteException {
                                 isSwipeCard = false;
+                                Log.d("onError", "onError: ");
+
+                                data = "Swipe Card Error";
+
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (callback != null) {
+                                            callback.onEventFinish(data);
+                                        }
+                                    }
+                                });
                             }
 
                             @Override
                             public void onCanceled() throws RemoteException {
                                 isSwipeCard = false;
+                                Log.d("onCanceled", "onCanceled: ");
+
+                                data = "Swipe Card Cancelled";
+
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (callback != null) {
+                                            callback.onEventFinish(data);
+                                        }
+                                    }
+                                });
                             }
                         });
             }
         } catch (RemoteException e) {
-            // TODO Auto-generated catch block
+            Log.e("getTrackData", "getTrackData: " +e.toString() );
             e.printStackTrace();
+            data = e.toString();
+
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (callback != null) {
+                        callback.onEventFinish(data);
+                    }
+                }
+            });
         }
     }
 
 
     /**
      * cancel swipe
-     *
-     * @createtor：Administrator
-     * @date:2015-8-4 上午7:29:49
      */
-    public void cancelSwipe() {
-        if (isSwipeCard == false) {
+    public void cancelSwipe(SwipeCardCallback callback) {
+        if (!isSwipeCard) {
+            data = "No Credit Card";
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (callback != null) {
+                        callback.onEventFinish(data);
+                    }
+                }
+            });
 
             return;
         }
@@ -236,9 +461,26 @@ public class SwipeCardActivity {
         if (null != magCardDev) {
             try {
                 magCardDev.stopSearch();
+                data = "Cancel Swipe";
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (callback != null) {
+                            callback.onEventFinish(data);
+                        }
+                    }
+                });
             } catch (RemoteException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
+                data = "Failed Cancel Swipe";
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (callback != null) {
+                            callback.onEventFinish(data);
+                        }
+                    }
+                });
             }
         }
     }

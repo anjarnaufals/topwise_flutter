@@ -20,15 +20,102 @@ class MethodChannelTopwise extends TopwisePlatform {
   Future<void> requestPermission() async {
     await methodChannel.invokeMethod<void>('requestPermission');
   }
+  // Magnetic Stripe Feature
 
   @override
   Future<String?> swipeCard() async {
     return await methodChannel.invokeMethod<String>('swipeCard');
   }
 
-  void setCallback(Function callback) {
+  @override
+  Future<String?> cancelSwipe() async {
+    return await methodChannel.invokeMethod<String>('cancelSwipe');
+  }
+  // end Magnetic Stripe Feature
+
+  // IC Card Feature
+  @override
+  Future<String?> openICCard() async {
+    return await methodChannel.invokeMethod<String>('openICCard');
+  }
+
+  @override
+  Future<String?> closeICCard() async {
+    return await methodChannel.invokeMethod<String>('closeICCard');
+  }
+
+  @override
+  Future<String?> isICCardExist() async {
+    return await methodChannel.invokeMethod<String>('isICCardExist');
+  }
+  // End IC Card Feature
+
+  // RF Card Feature
+  @override
+  Future<String?> openRFCard() async {
+    return await methodChannel.invokeMethod<String>('openRFCard');
+  }
+
+  @override
+  Future<String?> closeRFCard() async {
+    return await methodChannel.invokeMethod<String>('closeRFCard');
+  }
+
+  @override
+  Future<String?> isRFCardExists() async {
+    return await methodChannel.invokeMethod<String>('isRFCardExists');
+  }
+
+  @override
+  Future<String?> getUidRFCard() async {
+    return await methodChannel.invokeMethod<String>('getUidRFCard');
+  }
+
+  @override
+  Future<String?> readRFCardType() async {
+    return await methodChannel.invokeMethod<String>('readRFCardType');
+  }
+  // END RF Card Feature
+
+  // QR Scanner Feature
+
+  @override
+  Future<String?> openQRScanner() async {
+    return await methodChannel.invokeMethod<String>('openQRScanner');
+  }
+
+  @override
+  Future<String?> stopQRScanner() async {
+    return await methodChannel.invokeMethod<String>('stopQRScanner');
+  }
+
+  // End QR Scanner Feature
+
+  // Printer Feature
+
+  @override
+  Future<String?> getPrintState() async {
+    return await methodChannel.invokeMethod<String>('getPrintState');
+  }
+
+  @override
+  Future<String?> printTickertape() async {
+    return await methodChannel.invokeMethod<String>('printTickertape');
+  }
+  // End Printer Feature
+
+  /// Because Single Instance Method Channel Only
+  /// enable for handling single "setMethodCallHandler",
+  /// then the data have to be constructed.
+  ///
+  /// Later if the plugin become more complex maybe
+  /// we can create multiple method channel for better
+  /// organizational benefit
+  ///
+  /// but now we will use only single method channel
+  void universalCallback(Function callback) {
     methodChannel.setMethodCallHandler((call) async {
-      if (call.method == 'callbackMethod') {
+      if (call.method == 'universalCallback') {
         callback(call.arguments);
       }
     });

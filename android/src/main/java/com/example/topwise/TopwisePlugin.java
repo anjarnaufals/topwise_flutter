@@ -11,7 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.topwise.cloudpos.aidl.camera.AidlCameraScanCode;
+import com.topwise.cloudpos.aidl.iccard.AidlICCard;
 import com.topwise.cloudpos.aidl.magcard.AidlMagCard;
+import com.topwise.cloudpos.aidl.printer.AidlPrinter;
+import com.topwise.cloudpos.aidl.rfcard.AidlRFCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +41,9 @@ public class TopwisePlugin implements FlutterPlugin,
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
+  static String dartChannel = "topwise";
+  static String universaDartChannellCallback = "universalCallback";
+
   private MethodChannel channel;
   private DynamicPermissionTool permissionTool;
   private FlutterPluginBinding pluginBinding;
@@ -69,7 +76,7 @@ public class TopwisePlugin implements FlutterPlugin,
     DeviceServiceManager.getInstance().bindDeviceService(this.context);
     permissionTool = new DynamicPermissionTool(this.context);
     
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "topwise");
+    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), dartChannel);
     channel.setMethodCallHandler(this);
 
   }
@@ -79,28 +86,262 @@ public class TopwisePlugin implements FlutterPlugin,
     if (call.method.equals("getPlatformVersion")) {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
 
-    } else if (call.method.equals("requestPermission")) {
+      return;
+    }
+
+    if (call.method.equals("requestPermission")) {
       requestPermission();
 
-    } else if (call.method.equals("swipeCard")) {
+      return;
+    }
+
+    /*
+      Magnetic Stripe Swipe
+     */
+
+    if (call.method.equals("swipeCard")) {
       AidlMagCard magCardDev = DeviceServiceManager.getInstance().getMagCardReader();
 
       new SwipeCardActivity(magCardDev).getTrackData(new SwipeCardActivity.SwipeCardCallback() {
         @Override
-        public void onCardSwiped(String cardData) {
-          new MethodChannel(pluginBinding.getBinaryMessenger(), "topwise")
-                  .invokeMethod("callbackMethod", cardData);
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
         }
       });
 
+      result.success(null);
+      return;
+    }
 
+    if (call.method.equals("cancelSwipe")){
+      AidlMagCard magCardDev = DeviceServiceManager.getInstance().getMagCardReader();
+
+      new SwipeCardActivity(magCardDev).cancelSwipe(new SwipeCardActivity.SwipeCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
 
       result.success(null);
-
-    } else {
-      result.notImplemented();
+      return;
     }
+
+    /*
+      End Magnetic Stripe Swipe
+     */
+
+    /*
+      IC Card
+     */
+
+    if (call.method.equals("openICCard")){
+      AidlICCard icCard = DeviceServiceManager.getInstance().getICCardReader();
+
+      new ICCardActivity(icCard).open(new ICCardActivity.ICCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    if (call.method.equals("closeICCard")){
+      AidlICCard icCard = DeviceServiceManager.getInstance().getICCardReader();
+
+      new ICCardActivity(icCard).close(new ICCardActivity.ICCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    if (call.method.equals("isICCardExist")){
+      AidlICCard icCard = DeviceServiceManager.getInstance().getICCardReader();
+
+      new ICCardActivity(icCard).isExists(new ICCardActivity.ICCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    /*
+      End IC Card
+     */
+
+    /*
+      RF Card
+     */
+
+    if (call.method.equals("openRFCard")){
+      AidlRFCard rfcard = DeviceServiceManager.getInstance().getRfCardReader();
+
+      new RFCardActivity(rfcard).open(new RFCardActivity.RFCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    if (call.method.equals("closeRFCard")){
+      AidlRFCard rfcard = DeviceServiceManager.getInstance().getRfCardReader();
+
+      new RFCardActivity(rfcard).close(new RFCardActivity.RFCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    if (call.method.equals("isRFCardExists")){
+      AidlRFCard rfcard = DeviceServiceManager.getInstance().getRfCardReader();
+
+      new RFCardActivity(rfcard).isExists(new RFCardActivity.RFCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    if (call.method.equals("getUidRFCard")){
+      AidlRFCard rfcard = DeviceServiceManager.getInstance().getRfCardReader();
+
+      new RFCardActivity(rfcard).getUid(new RFCardActivity.RFCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    if (call.method.equals("readRFCardType")){
+      AidlRFCard rfcard = DeviceServiceManager.getInstance().getRfCardReader();
+
+      new RFCardActivity(rfcard).readCardType(new RFCardActivity.RFCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    /*
+      End RF Card
+     */
+
+    /*
+      QR Code
+     */
+    if (call.method.equals("openQRScanner")){
+      AidlCameraScanCode cameraScanCode =DeviceServiceManager.getInstance().getCameraManager();
+
+      new QrCodeScannerActivity(cameraScanCode).backScan(new QrCodeScannerActivity.QrCodeScannerCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    if (call.method.equals("stopQRScanner")){
+      AidlCameraScanCode cameraScanCode =DeviceServiceManager.getInstance().getCameraManager();
+
+      new QrCodeScannerActivity(cameraScanCode).stopScan(new QrCodeScannerActivity.QrCodeScannerCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+    /*
+      End QR Code
+    */
+
+    /*
+      Printer
+    */
+    if (call.method.equals("getPrintState")){
+      AidlPrinter aidlPrinter =DeviceServiceManager.getInstance().getPrintManager();
+
+      new PrintDevActivity(aidlPrinter, this.context).getPrintState(new PrintDevActivity.PrintDevCallBack() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    if (call.method.equals("printTickertape")){
+      AidlPrinter aidlPrinter =DeviceServiceManager.getInstance().getPrintManager();
+
+      new PrintDevActivity(aidlPrinter, this.context).printTickertape(new PrintDevActivity.PrintDevCallBack() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      }, this.context);
+
+      result.success(null);
+      return;
+    }
+    /*
+      End Printer
+    */
   }
+
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
@@ -163,34 +404,4 @@ public class TopwisePlugin implements FlutterPlugin,
         permissionTool.requestNecessaryPermissions(activity, deniedPermissions, REQUEST_CODE1);
     }
   }
-
-//  private void ensurePermissions(List<String> permissions, OperationOnPermission operation)
-//  {
-//    // only request permission we don't already have
-//    List<String> permissionsNeeded = new ArrayList<>();
-//    for (String permission : permissions) {
-//      if (permission != null && ContextCompat.checkSelfPermission(context, permission)
-//              != PackageManager.PERMISSION_GRANTED) {
-//        permissionsNeeded.add(permission);
-//      }
-//    }
-//
-//    // no work to do?
-//    if (permissionsNeeded.isEmpty()) {
-//      operation.op(true, null);
-//      return;
-//    }
-//
-//    askPermission(permissionsNeeded, operation);
-//  }
-
-//  private void askPermission(List<String> permissionsNeeded, OperationOnPermission operation)
-//  {
-//    // finished asking for permission? call callback
-//    if (permissionsNeeded.isEmpty()) {
-//      operation.op(true, null);
-//      return;
-//    }
-//
-//  }
 }

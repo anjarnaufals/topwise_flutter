@@ -23,8 +23,81 @@ class MockTopwisePlatform
   }
 
   @override
-  void setCallback(Function callback) {
-    // TODO: implement setCallback
+  Future<String?> cancelSwipe() {
+    // TODO: implement cancelSwipe
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> closeICCard() {
+    // TODO: implement closeICCard
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> openICCard() {
+    // TODO: implement openICCard
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> isICCardExist() {
+    // TODO: implement isICCardExist
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> closeRFCard() {
+    // TODO: implement closeRFCard
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getUidRFCard() {
+    // TODO: implement getUidRFCard
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> isRFCardExists() {
+    // TODO: implement isRFCardExists
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> openRFCard() {
+    // TODO: implement openRFCard
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> readRFCardType() {
+    // TODO: implement readRFCardType
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> openQRScanner() {
+    // TODO: implement openQRScanner
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> stopQRScanner() {
+    // TODO: implement stopQRScanner
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getPrintState() {
+    // TODO: implement getPrintState
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> printTickertape() {
+    // TODO: implement printTickertape
+    throw UnimplementedError();
   }
 }
 

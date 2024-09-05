@@ -31,7 +31,69 @@ abstract class TopwisePlatform extends PlatformInterface {
     throw UnimplementedError('requestPermission() has not been implemented.');
   }
 
+  // Magnetic Stripe Feature
   Future<String?> swipeCard() {
     throw UnimplementedError('swipeCard() has not been implemented.');
   }
+
+  Future<String?> cancelSwipe() {
+    throw UnimplementedError('cancelSwipe() has not been implemented.');
+  }
+  // end Magnetic Stripe Feature
+
+  // IC Card Feature
+  Future<String?> openICCard() {
+    throw UnimplementedError('openICCard() has not been implemented.');
+  }
+
+  Future<String?> closeICCard() {
+    throw UnimplementedError('closeICCard() has not been implemented.');
+  }
+
+  Future<String?> isICCardExist() {
+    throw UnimplementedError('isICCardExist() has not been implemented.');
+  }
+  // End IC Card Feature
+
+  // RF Card Feature
+  Future<String?> openRFCard() {
+    throw UnimplementedError('openRFCard() has not been implemented.');
+  }
+
+  Future<String?> closeRFCard() {
+    throw UnimplementedError('closeRFCard() has not been implemented.');
+  }
+
+  Future<String?> isRFCardExists() {
+    throw UnimplementedError('isRFCardExists() has not been implemented.');
+  }
+
+  Future<String?> getUidRFCard() {
+    throw UnimplementedError('getUidRFCard() has not been implemented.');
+  }
+
+  Future<String?> readRFCardType() {
+    throw UnimplementedError('readRFCardType() has not been implemented.');
+  }
+  // End RF Card Feature
+
+  // QR Scanner Feature
+  Future<String?> openQRScanner() {
+    throw UnimplementedError('openQRScanner() has not been implemented.');
+  }
+
+  Future<String?> stopQRScanner() {
+    throw UnimplementedError('stopQRScanner() has not been implemented.');
+  }
+  // End QR Scanner Feature
+
+  // Printer Feature
+  Future<String?> getPrintState() {
+    throw UnimplementedError('getPrintState() has not been implemented.');
+  }
+
+  Future<String?> printTickertape() {
+    throw UnimplementedError('printTickertape() has not been implemented.');
+  }
+  // End Printer Feature
 }
