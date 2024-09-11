@@ -23,8 +23,10 @@ public class QrCodeScannerActivity   {
     private AidlCameraScanCode iScanner = null;
     private static final String TAG = "TPW-QrCodeScanner";
     private boolean HAS_CAMERA_FACING_FRONT = false;
+    String data="";
 
-     String data="";
+    private static final String qrScanner= "qrScanner";
+
 
 
     public QrCodeScannerActivity(AidlCameraScanCode aidlCameraScanCode){

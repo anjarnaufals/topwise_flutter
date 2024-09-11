@@ -12,8 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.topwise.cloudpos.aidl.magcard.AidlMagCard;
 import com.topwise.cloudpos.aidl.shellmonitor.AidlShellMonitor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ShellCmdActivity  {
 	private AidlShellMonitor shellMonitorInf=null;
@@ -24,8 +29,11 @@ public class ShellCmdActivity  {
 	private EditText et_two;
 	private EditText et_three;
 
-	String data="";
+	private static final String shellCMD= "shellCMD";
 
+
+
+	String data="";
 
 	public ShellCmdActivity(AidlShellMonitor aidlShellMonitor) {
 		this.shellMonitorInf = aidlShellMonitor;
@@ -48,6 +56,18 @@ public class ShellCmdActivity  {
 					@Override
 					public void run() {
 						if (callback != null) {
+							Map<String, Object> raw = new HashMap<>();
+							raw.put("type" ,shellCMD);
+							raw.put("data",hardwareSNPlaintext);
+
+							ObjectMapper mapper = new ObjectMapper();
+
+							try {
+								data = mapper.writeValueAsString(raw);
+							} catch (JsonProcessingException e) {
+								throw new RuntimeException(e);
+							}
+
 							callback.onEventFinish(data);
 						}
 					}

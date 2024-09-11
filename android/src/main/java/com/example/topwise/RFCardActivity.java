@@ -15,8 +15,9 @@ import com.topwise.cloudpos.aidl.rfcard.AidlRFCard;
 public class RFCardActivity {
 
     public AidlRFCard rfcard = null;
-
     String data = "";
+    private static final String rfCard= "rfCard";
+
 
 
     public RFCardActivity(AidlRFCard aidlRFCard) {

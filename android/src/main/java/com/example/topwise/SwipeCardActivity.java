@@ -25,6 +25,9 @@ public class SwipeCardActivity {
     private final byte keyIndex = 0x00;
     String data = "";
 
+    private static final String magneticStripe= "magneticStripe";
+
+
     public SwipeCardActivity(AidlMagCard magCardDev) {
         this.magCardDev = magCardDev;
     }

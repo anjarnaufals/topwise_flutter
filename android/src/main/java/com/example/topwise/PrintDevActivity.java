@@ -41,6 +41,8 @@ public class PrintDevActivity extends  BaseUtils {
     private boolean printRunning =  false;
     private  final  static  int BUFF_LEN = 48*2*5;
 
+    private static final String printer= "printer";
+
     String data = "";
 
 

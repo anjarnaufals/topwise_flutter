@@ -15,8 +15,9 @@ import com.topwise.cloudpos.aidl.iccard.AidlICCard;
 public class ICCardActivity extends BaseUtils{
 
 	private AidlICCard iccard = null;
-
 	String data = "";
+	private static final String icCard= "icCard";
+
 
 
 	public ICCardActivity(AidlICCard aidlICCard) {
