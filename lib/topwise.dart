@@ -68,4 +68,7 @@ class Topwise {
   Future<String?> getHardwareSN() {
     return TopwisePlatform.instance.getHardwareSN();
   }
+
+  void universalCallback(Function callback) =>
+      TopwisePlatform.instance.universalCallback(callback);
 }

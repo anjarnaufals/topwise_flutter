@@ -122,6 +122,7 @@ class MethodChannelTopwise extends TopwisePlatform {
   /// but now we will use only single method channel
   ///
   // TODO : every value come from method channel must be constructed to every topwise data type
+  @override
   void universalCallback(Function callback) {
     methodChannel.setMethodCallHandler((call) async {
       if (call.method == 'universalCallback') {

@@ -105,6 +105,11 @@ class MockTopwisePlatform
     // TODO: implement getHardwareSN
     throw UnimplementedError();
   }
+  
+  @override
+  void universalCallback(Function callback) {
+    // TODO: implement universalCallback
+  }
 }
 
 void main() {

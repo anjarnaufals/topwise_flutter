@@ -23,83 +23,54 @@ abstract class TopwisePlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
-  }
+  Future<String?> getPlatformVersion();
 
-  Future<void> requestPermission() {
-    throw UnimplementedError('requestPermission() has not been implemented.');
-  }
+  Future<void> requestPermission();
 
   // Magnetic Stripe Feature
-  Future<String?> swipeCard() {
-    throw UnimplementedError('swipeCard() has not been implemented.');
-  }
+  Future<String?> swipeCard();
 
-  Future<String?> cancelSwipe() {
-    throw UnimplementedError('cancelSwipe() has not been implemented.');
-  }
+  Future<String?> cancelSwipe();
   // end Magnetic Stripe Feature
 
   // IC Card Feature
-  Future<String?> openICCard() {
-    throw UnimplementedError('openICCard() has not been implemented.');
-  }
+  Future<String?> openICCard();
 
-  Future<String?> closeICCard() {
-    throw UnimplementedError('closeICCard() has not been implemented.');
-  }
+  Future<String?> closeICCard();
 
-  Future<String?> isICCardExist() {
-    throw UnimplementedError('isICCardExist() has not been implemented.');
-  }
+  Future<String?> isICCardExist();
   // End IC Card Feature
 
   // RF Card Feature
-  Future<String?> openRFCard() {
-    throw UnimplementedError('openRFCard() has not been implemented.');
-  }
+  Future<String?> openRFCard();
 
-  Future<String?> closeRFCard() {
-    throw UnimplementedError('closeRFCard() has not been implemented.');
-  }
+  Future<String?> closeRFCard();
 
   Future<String?> isRFCardExists() {
     throw UnimplementedError('isRFCardExists() has not been implemented.');
   }
 
-  Future<String?> getUidRFCard() {
-    throw UnimplementedError('getUidRFCard() has not been implemented.');
-  }
+  Future<String?> getUidRFCard();
 
-  Future<String?> readRFCardType() {
-    throw UnimplementedError('readRFCardType() has not been implemented.');
-  }
+  Future<String?> readRFCardType();
   // End RF Card Feature
 
   // QR Scanner Feature
-  Future<String?> openQRScanner() {
-    throw UnimplementedError('openQRScanner() has not been implemented.');
-  }
+  Future<String?> openQRScanner();
 
-  Future<String?> stopQRScanner() {
-    throw UnimplementedError('stopQRScanner() has not been implemented.');
-  }
+  Future<String?> stopQRScanner();
   // End QR Scanner Feature
 
   // Printer Feature
-  Future<String?> getPrintState() {
-    throw UnimplementedError('getPrintState() has not been implemented.');
-  }
+  Future<String?> getPrintState();
 
-  Future<String?> printTickertape() {
-    throw UnimplementedError('printTickertape() has not been implemented.');
-  }
+  Future<String?> printTickertape();
   // End Printer Feature
 
   // Shell CMD
-  Future<String?> getHardwareSN() {
-    throw UnimplementedError('getHardwareSN() has not been implemented.');
-  }
+  Future<String?> getHardwareSN();
   // End Shell CMD
+
+  //universal
+  void universalCallback(Function callback);
 }
