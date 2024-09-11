@@ -1,8 +1,7 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:topwise/topwise.dart';
 import 'package:topwise/topwise_method_channel.dart';
@@ -195,6 +194,15 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> getHardwareSN() async {
+    try {
+      var data = await _topwisePlugin.getHardwareSN();
+      log('$data', name: 'getHardwareSN');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -285,6 +293,11 @@ class _MyAppState extends State<MyApp> {
                   await printTickertape();
                 },
                 child: const Text('print Ticker Tape')),
+            TextButton(
+                onPressed: () async {
+                  await getHardwareSN();
+                },
+                child: const Text('get Hardware Serial Number')),
           ],
         ),
       ),

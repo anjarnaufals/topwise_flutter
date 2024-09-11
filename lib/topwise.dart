@@ -64,4 +64,8 @@ class Topwise {
   Future<String?> printTickertape() {
     return TopwisePlatform.instance.printTickertape();
   }
+
+  Future<String?> getHardwareSN() {
+    return TopwisePlatform.instance.getHardwareSN();
+  }
 }

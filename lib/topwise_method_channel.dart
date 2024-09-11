@@ -104,6 +104,13 @@ class MethodChannelTopwise extends TopwisePlatform {
   }
   // End Printer Feature
 
+  // Shell CMD
+  @override
+  Future<String?> getHardwareSN() async {
+    return await methodChannel.invokeMethod<String>('getHardwareSN');
+  }
+  // End Shell CMD
+
   /// Because Single Instance Method Channel Only
   /// enable for handling single "setMethodCallHandler",
   /// then the data have to be constructed.
@@ -113,6 +120,8 @@ class MethodChannelTopwise extends TopwisePlatform {
   /// organizational benefit
   ///
   /// but now we will use only single method channel
+  ///
+  // TODO : every value come from method channel must be constructed to every topwise data type
   void universalCallback(Function callback) {
     methodChannel.setMethodCallHandler((call) async {
       if (call.method == 'universalCallback') {

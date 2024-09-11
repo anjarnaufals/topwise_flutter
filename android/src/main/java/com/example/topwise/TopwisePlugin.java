@@ -16,6 +16,7 @@ import com.topwise.cloudpos.aidl.iccard.AidlICCard;
 import com.topwise.cloudpos.aidl.magcard.AidlMagCard;
 import com.topwise.cloudpos.aidl.printer.AidlPrinter;
 import com.topwise.cloudpos.aidl.rfcard.AidlRFCard;
+import com.topwise.cloudpos.aidl.shellmonitor.AidlShellMonitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,6 +81,13 @@ public class TopwisePlugin implements FlutterPlugin,
     channel.setMethodCallHandler(this);
 
   }
+
+  // TODO : construct every data needed to every feature
+  // TODO : construct value to Magnetic Stripe (Swipe) data
+  // TODO : construct value to IC Card data
+  // TODO : construct value to RF Card (NFC Contacless) data
+  // TODO : construct value to Scanner Camera (QR Scanner) data
+  // TODO : construct value to printer data
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
@@ -340,6 +348,27 @@ public class TopwisePlugin implements FlutterPlugin,
     /*
       End Printer
     */
+
+    /*
+      Shell CMD
+     */
+      if(call.method.equals("getHardwareSN")){
+        AidlShellMonitor aidlShellMonitor = DeviceServiceManager.getInstance().getShellMonitor();
+
+        new ShellCmdActivity(aidlShellMonitor).getHardwareSNPlaintext(new ShellCmdActivity.ShellCmdCallback() {
+          @Override
+          public void onEventFinish(String value) {
+            new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                    .invokeMethod(universaDartChannellCallback, value);
+          }
+        });
+
+        result.success(null);
+        return;
+      }
+    /*
+      End Shell CMD
+     */
   }
 
 

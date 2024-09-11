@@ -96,4 +96,10 @@ abstract class TopwisePlatform extends PlatformInterface {
     throw UnimplementedError('printTickertape() has not been implemented.');
   }
   // End Printer Feature
+
+  // Shell CMD
+  Future<String?> getHardwareSN() {
+    throw UnimplementedError('getHardwareSN() has not been implemented.');
+  }
+  // End Shell CMD
 }

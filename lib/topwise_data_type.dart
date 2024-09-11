@@ -4,4 +4,5 @@ sealed class TopwiseDataType {
   static const String nfcContactless = "nfcContactless";
   static const String qrCodeScanner = "qrCodeScanner";
   static const String printer = "printer";
+  static const String shellCMD = "shellCMD";
 }
