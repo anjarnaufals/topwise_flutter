@@ -78,6 +78,7 @@ public class SwipeCardActivity {
                         dataMap.put("formattedTrackData", trackData.getFormatTrackData());
                         dataMap.put("serviceCode", trackData.getServiceCode());
 
+
                         ObjectMapper objectMapper = new ObjectMapper();
 
                         try {
