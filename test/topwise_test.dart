@@ -105,10 +105,28 @@ class MockTopwisePlatform
     // TODO: implement getHardwareSN
     throw UnimplementedError();
   }
-  
+
   @override
   void universalCallback(Function callback) {
     // TODO: implement universalCallback
+  }
+
+  @override
+  Future<String?> resetCard() {
+    // TODO: implement resetCard
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> sendApduCom() {
+    // TODO: implement sendApduCom
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> sendCustomApduCom(String hexApdu) {
+    // TODO: implement sendCustomApduCom
+    throw UnimplementedError();
   }
 }
 

@@ -48,6 +48,22 @@ class MethodChannelTopwise extends TopwisePlatform {
   Future<String?> isICCardExist() async {
     return await methodChannel.invokeMethod<String>('isICCardExist');
   }
+
+  @override
+  Future<String?> resetCard() async {
+    return await methodChannel.invokeMethod<String>('resetCard');
+  }
+
+  @override
+  Future<String?> sendApduCom() async {
+    return await methodChannel.invokeMethod<String>('sendApduCom');
+  }
+
+  @override
+  Future<String?> sendCustomApduCom(String hexApdu) async {
+    return await methodChannel
+        .invokeMethod<String>('sendCustomApduCom', {"hexApdu": hexApdu});
+  }
   // End IC Card Feature
 
   // RF Card Feature

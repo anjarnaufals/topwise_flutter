@@ -39,6 +39,12 @@ abstract class TopwisePlatform extends PlatformInterface {
   Future<String?> closeICCard();
 
   Future<String?> isICCardExist();
+
+  Future<String?> resetCard();
+
+  Future<String?> sendApduCom();
+
+  Future<String?> sendCustomApduCom(String hexApdu);
   // End IC Card Feature
 
   // RF Card Feature

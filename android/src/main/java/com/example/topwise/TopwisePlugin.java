@@ -190,6 +190,53 @@ public class TopwisePlugin implements FlutterPlugin,
       return;
     }
 
+    if (call.method.equals("resetCard")){
+      AidlICCard icCard = DeviceServiceManager.getInstance().getICCardReader();
+
+      new ICCardActivity(icCard).cardReset(new ICCardActivity.ICCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    if (call.method.equals("sendApduCom")){
+      AidlICCard icCard = DeviceServiceManager.getInstance().getICCardReader();
+
+      new ICCardActivity(icCard).apduComm(new ICCardActivity.ICCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      });
+
+      result.success(null);
+      return;
+    }
+
+    if (call.method.equals("sendCustomApduCom")){
+      AidlICCard icCard = DeviceServiceManager.getInstance().getICCardReader();
+
+      String apduComCustom = call.argument("hexApdu");
+
+      new ICCardActivity(icCard).apduCommCustom(new ICCardActivity.ICCardCallback() {
+        @Override
+        public void onEventFinish(String value) {
+          new MethodChannel(pluginBinding.getBinaryMessenger(), dartChannel)
+                  .invokeMethod(universaDartChannellCallback, value);
+        }
+      }, apduComCustom);
+
+      result.success(null);
+      return;
+    }
+
     /*
       End IC Card
      */

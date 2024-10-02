@@ -242,6 +242,61 @@ public class ICCardActivity extends BaseUtils{
 		}
 	}
 
+	public void apduCommCustom(ICCardCallback callback, String apduCustom) {
+		if(isNormalVelocityClick(DELAY_TIME)) {
+			byte[] apdu = HexUtil
+					.hexStringToByte(apduCustom);
+			try {
+				byte[] dataInternal = iccard.apduComm(apdu);
+				if (null != dataInternal) {
+
+					data = "Custom-Apdu-Result = "+ HexUtil.bcd2str(dataInternal);
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+						@Override
+						public void run() {
+							if (callback != null) {
+								callback.onEventFinish(data);
+							}
+						}
+					});
+
+				} else {
+
+					data = "Test APDU data failed";
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+						@Override
+						public void run() {
+							if (callback != null) {
+								callback.onEventFinish(data);
+							}
+						}
+					});
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
+				data = e.toString();
+				new Handler(Looper.getMainLooper()).post(new Runnable() {
+					@Override
+					public void run() {
+						if (callback != null) {
+							callback.onEventFinish(data);
+						}
+					}
+				});
+			}
+		} else {
+			data = "Do Not Click Quickly !";
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override
+				public void run() {
+					if (callback != null) {
+						callback.onEventFinish(data);
+					}
+				}
+			});
+		}
+	}
+
 	public void cardReset(ICCardCallback callback) {
 		if(isNormalVelocityClick(DELAY_TIME)) {
 			try {
