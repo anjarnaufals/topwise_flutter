@@ -4,7 +4,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.topwise.cloudpos.aidl.iccard.AidlICCard;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *  Chip card test
@@ -298,7 +303,14 @@ public class ICCardActivity extends BaseUtils{
 				boolean flag = iccard.isExist();
 				if (flag) {
 
-					data = "Card Is Exist";
+					Map<String, Object> dataMap = new HashMap<>();
+
+					dataMap.put("isCardExist", true);
+
+					ObjectMapper objectMapper = new ObjectMapper();
+
+					data = objectMapper.writeValueAsString(dataMap);
+
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 						@Override
 						public void run() {
@@ -309,8 +321,14 @@ public class ICCardActivity extends BaseUtils{
 					});
 
 				} else {
+					Map<String, Object> dataMap = new HashMap<>();
 
-					data = "Card Is Not Exist";
+					dataMap.put("isCardExist", false);
+
+					ObjectMapper objectMapper = new ObjectMapper();
+
+					data = objectMapper.writeValueAsString(dataMap);
+
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 						@Override
 						public void run() {
@@ -331,8 +349,10 @@ public class ICCardActivity extends BaseUtils{
 						}
 					}
 				});
-			}
-		} else {
+			} catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
 			data = "Do Not Click Quickly !";
 			new Handler(Looper.getMainLooper()).post(new Runnable() {
 				@Override
