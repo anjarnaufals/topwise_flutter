@@ -20,8 +20,9 @@ import java.util.Map;
 public class ICCardActivity extends BaseUtils{
 
 	private AidlICCard iccard = null;
-
 	String data = "";
+	private static final String icCard= "icCard";
+
 
 
 	public ICCardActivity(AidlICCard aidlICCard) {
@@ -200,6 +201,61 @@ public class ICCardActivity extends BaseUtils{
 				if (null != dataInternal) {
 
 					data = "Choice Main Menu Result"+ HexUtil.bcd2str(dataInternal);
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+						@Override
+						public void run() {
+							if (callback != null) {
+								callback.onEventFinish(data);
+							}
+						}
+					});
+
+				} else {
+
+					data = "Test APDU data failed";
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+						@Override
+						public void run() {
+							if (callback != null) {
+								callback.onEventFinish(data);
+							}
+						}
+					});
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
+				data = e.toString();
+				new Handler(Looper.getMainLooper()).post(new Runnable() {
+					@Override
+					public void run() {
+						if (callback != null) {
+							callback.onEventFinish(data);
+						}
+					}
+				});
+			}
+		} else {
+			data = "Do Not Click Quickly !";
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override
+				public void run() {
+					if (callback != null) {
+						callback.onEventFinish(data);
+					}
+				}
+			});
+		}
+	}
+
+	public void apduCommCustom(ICCardCallback callback, String apduCustom) {
+		if(isNormalVelocityClick(DELAY_TIME)) {
+			byte[] apdu = HexUtil
+					.hexStringToByte(apduCustom);
+			try {
+				byte[] dataInternal = iccard.apduComm(apdu);
+				if (null != dataInternal) {
+
+					data = "Custom-Apdu-Result = "+ HexUtil.bcd2str(dataInternal);
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 						@Override
 						public void run() {

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:topwise/topwise.dart';
-import 'package:topwise/topwise_platform_interface.dart';
-import 'package:topwise/topwise_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:topwise/topwise.dart';
+import 'package:topwise/topwise_method_channel.dart';
+import 'package:topwise/topwise_platform_interface.dart';
 
 class MockTopwisePlatform
     with MockPlatformInterfaceMixin
@@ -97,6 +97,35 @@ class MockTopwisePlatform
   @override
   Future<String?> printTickertape() {
     // TODO: implement printTickertape
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getHardwareSN() {
+    // TODO: implement getHardwareSN
+    throw UnimplementedError();
+  }
+
+  @override
+  void universalCallback(Function callback) {
+    // TODO: implement universalCallback
+  }
+
+  @override
+  Future<String?> resetCard() {
+    // TODO: implement resetCard
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> sendApduCom() {
+    // TODO: implement sendApduCom
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> sendCustomApduCom(String hexApdu) {
+    // TODO: implement sendCustomApduCom
     throw UnimplementedError();
   }
 }

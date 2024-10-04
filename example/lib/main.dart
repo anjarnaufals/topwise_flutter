@@ -1,8 +1,7 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:topwise/topwise.dart';
 import 'package:topwise/topwise_method_channel.dart';
@@ -195,6 +194,46 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> getHardwareSN() async {
+    try {
+      var data = await _topwisePlugin.getHardwareSN();
+      log('$data', name: 'getHardwareSN');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> resetICCard() async {
+    try {
+      var data = await _topwisePlugin.resetCard();
+      log('$data', name: 'resetICCard');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> sendDefaultApduCom() async {
+    try {
+      var data = await _topwisePlugin.sendApduCom();
+      log('$data', name: 'sendDefaultApduCom');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> sendCustomApduCom() async {
+    try {
+      String test = "00A4040000";
+      // String test = "00A404000AA000000151";
+
+      //
+      var data = await _topwisePlugin.sendCustomApduCom(test);
+      log('$data', name: 'sendCustomApduCom');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -202,14 +241,21 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.all(16),
+          color: Colors.grey[300],
+          width: double.infinity,
+          alignment: Alignment.center,
+          height: kToolbarHeight * 3,
+          child: ValueListenableBuilder(
+            valueListenable: somethingDataFromChannel,
+            builder: (_, __, ___) => Text(somethingDataFromChannel.value),
+          ),
+        ),
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             Text('Running on: $_platformVersion\n'),
-            ValueListenableBuilder(
-              valueListenable: somethingDataFromChannel,
-              builder: (_, __, ___) => Text(somethingDataFromChannel.value),
-            ),
             TextButton(
                 onPressed: () async {
                   await initPermission();
@@ -285,6 +331,26 @@ class _MyAppState extends State<MyApp> {
                   await printTickertape();
                 },
                 child: const Text('print Ticker Tape')),
+            TextButton(
+                onPressed: () async {
+                  await getHardwareSN();
+                },
+                child: const Text('get Hardware Serial Number')),
+            TextButton(
+                onPressed: () async {
+                  await resetICCard();
+                },
+                child: const Text('reset IC Card')),
+            TextButton(
+                onPressed: () async {
+                  await sendDefaultApduCom();
+                },
+                child: const Text('send Default ApduCom')),
+            TextButton(
+                onPressed: () async {
+                  await sendCustomApduCom();
+                },
+                child: const Text('send Custom ApduCom')),
           ],
         ),
       ),

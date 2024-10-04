@@ -4,4 +4,18 @@ sealed class TopwiseDataType {
   static const String nfcContactless = "nfcContactless";
   static const String qrCodeScanner = "qrCodeScanner";
   static const String printer = "printer";
+  static const String shellCMD = "shellCMD";
+}
+
+//
+// var dataTransfer = {
+//   "type" : "shellCMD",
+//   "data" : {},
+// };
+
+class ShellCMD extends TopwiseDataType {
+  final String? serialNumber;
+  ShellCMD({
+    this.serialNumber,
+  });
 }

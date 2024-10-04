@@ -25,6 +25,9 @@ public class SwipeCardActivity {
     private final byte keyIndex = 0x00;
     String data = "";
 
+    private static final String magneticStripe= "magneticStripe";
+
+
     public SwipeCardActivity(AidlMagCard magCardDev) {
         this.magCardDev = magCardDev;
     }
@@ -74,6 +77,7 @@ public class SwipeCardActivity {
                         dataMap.put("expiryDate", trackData.getExpiryDate());
                         dataMap.put("formattedTrackData", trackData.getFormatTrackData());
                         dataMap.put("serviceCode", trackData.getServiceCode());
+
 
                         ObjectMapper objectMapper = new ObjectMapper();
 
